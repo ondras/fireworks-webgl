@@ -20,38 +20,43 @@ window.onresize = sync;
 sync();
 
 var scene = [];
+var stars = new Stars(gl);
 
-var program = new Program(gl, {
-	vsId: "vs",
-	fsId: "fs",
-	attributes: ["aPosition", "aVelocity"],
-	uniforms: ["uModelView", "uProjection", "uStartTime", "uCurrentTime", "uLifetime", "uGravity", "uColor"]
-});
+var programs = {
+	points: new Program.Points(gl),
+	explosions: new Program.ParticleSet(gl)
+}
 
-program.use();
-gl.uniform3f(program.uniforms.uGravity, 0, -1e-7, 0);
-
+var gravity = vec3.fromValues(0, -1e-7, 0);
 var eye = vec3.create();
 var center = vec3.create();
 var up = vec3.fromValues(0, 1, 0);
 
-var render = function() {
-	var u = program.uniforms;
-	var now = Date.now();
 
-	var t = now / 10000;
+var render = function() {
+	var now = Date.now();
+	var t = now / 2e4;
 	eye[0] = 10*Math.cos(t);
 	eye[2] = 10*Math.sin(t);
 	camera.lookAt(eye, center, up);
 
 	gl.clear(gl.COLOR_BUFFER_BIT);
 
-//	gl.uniformMatrix4fv(u.uView, false, camera.vMatrix);
+	/* 1. background */
+	programs.points.use();
+
+	stars.render(programs.points, camera);
+	
+	/* explosions */
+	programs.explosions.use();
+	var u = programs.explosions.uniforms;
+
 	gl.uniformMatrix4fv(u.uProjection, false, camera.pMatrix);
+	gl.uniform3fv(u.uGravity, gravity);
 	gl.uniform1i(u.uCurrentTime, now);
 	
 	scene = scene.filter(function(item) {
-		return item.render(program, now, camera.vMatrix);
+		return item.render(programs.explosions, now, camera.vMatrix);
 	});
 }
 

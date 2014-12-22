@@ -13,14 +13,12 @@ var ParticleSet = function(gl, color) {
 ParticleSet.prototype._build = function(gl, buffers) {
 	this._count = 1000;
 	
-	var center = vec3.fromValues(2*(Math.random() - 0.5), 2*(Math.random() - 0.5), 2*(Math.random() - 0.5));
 	var tmp = vec3.create();
-	
 	var position = [];
 	var velocity = [];
 	
 	for (var i=0;i<this._count;i++) {
-		position.push(center[0], center[1], center[2]);
+		position.push(0, 0, 0);
 		vec3.random(tmp, 0.3);
 		velocity.push(tmp[0], tmp[1], tmp[2]);
 	}

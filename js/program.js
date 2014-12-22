@@ -3,8 +3,8 @@ var Program = function(gl, def) {
 	this.attributes = {};
 	this.uniforms = {};
 
-	var vs = (def.vs ? this._shaderFromString(def.vs) : this._shaderFromId(def.vsId));
-	var fs = (def.fs ? this._shaderFromString(def.fs) : this._shaderFromId(def.fsId));
+	var vs = (def.vs ? this._shaderFromString(gl.VERTEX_SHADER, def.vs) : this._shaderFromId(def.vsId));
+	var fs = (def.fs ? this._shaderFromString(gl.FRAGMENT_SHADER, def.fs) : this._shaderFromId(def.fsId));
 
 	this.program = gl.createProgram();
 	gl.attachShader(this.program, vs);
@@ -20,7 +20,6 @@ var Program = function(gl, def) {
 
 	(def.attributes || []).forEach(function(name) {
 		this.attributes[name] = gl.getAttribLocation(this.program, name);
-		gl.enableVertexAttribArray(this.attributes[name]);
 	}, this);
 
 	(def.uniforms || []).forEach(function(name) {
@@ -30,6 +29,10 @@ var Program = function(gl, def) {
 
 Program.prototype.use = function() {
 	this.gl.useProgram(this.program);
+
+	for (var p in this.attributes) { 
+		this.gl.enableVertexAttribArray(this.attributes[p]);
+	}
 }
 
 Program.prototype._shaderFromId = function(id) {

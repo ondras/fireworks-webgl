@@ -1,8 +1,14 @@
 var Explosion = function(gl) {
 	this._gl = gl;
 	this._ts = Date.now();
-	this._lifetime = 3000;
+	this._lifetime = 2000 + 2000*Math.random();
 	this._position = mat4.create();
+
+	var center = vec3.create();
+	for (var i=0;i<3;i++) {
+		center[i] = 4*(Math.random()-.5);
+	}
+	mat4.translate(this._position, this._position, center);
 	
 	var color = vec3.fromValues(0.2+0.8*Math.random(), 0.2+0.8*Math.random(), 0.2+0.8*Math.random());
 
