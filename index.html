@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<script src="js/gl-matrix-min.js"></script>
+		<script src="js/camera.js"></script>
+		<script src="js/program.js"></script>
+		<script src="js/particleset.js"></script>
+		<script src="js/explosion.js"></script>
+		<style>
+			html, body { margin: 0; height: 100%; overflow: hidden; }
+			canvas { display: block; }
+		</style>
+
+<script id="vs" type="x-shader/x-vertex">
+attribute vec3 aPosition;
+attribute vec3 aVelocity;
+
+uniform mat4 uProjection;
+uniform mat4 uModelView;
+uniform vec3 uGravity;
+uniform vec3 uColor;
+uniform int uStartTime;
+uniform int uCurrentTime;
+uniform float uLifetime;
+
+varying vec3 vColor;
+varying float vLifetime;
+
+void main(void) {
+	float age = float(uCurrentTime - uStartTime);
+
+	vec3 position = aPosition 
+						+ log(1.0+age * 0.1) * aVelocity
+						+ 0.5 * age * age * uGravity;
+						
+	vec4 cameraPosition = uModelView * vec4(position, 1.0);
+	gl_Position = uProjection * cameraPosition;
+
+	float distanceSquared = abs(dot(cameraPosition, cameraPosition));
+	float scale = clamp(distanceSquared, 1.0, 10000.0);      
+	gl_PointSize = 3.0 + 6.0 / (scale / 50.0);
+
+	vLifetime = 1.0 - (age / uLifetime);
+	vColor = uColor;
+}
+</script>
+
+<script id="fs" type="x-shader/x-fragment">
+precision highp float;
+
+varying vec3 vColor;
+varying float vLifetime;
+
+void main(void) {
+	float dist = length((gl_PointCoord-0.5)*2.0);
+	if (dist > 1.0) { discard; }
+
+	float alpha = 1.0-dist;
+	alpha = pow(alpha, 2.0);
+	alpha = alpha * vLifetime;
+
+	gl_FragColor = vec4(vColor, alpha);
+}
+</script>		
+	</head>
+	<body>
+		<script src="js/main.js"></script>
+	</body>
+</html>
