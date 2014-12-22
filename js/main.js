@@ -36,8 +36,9 @@ var up = vec3.fromValues(0, 1, 0);
 var render = function() {
 	var now = Date.now();
 	var t = now / 2e4;
-	eye[0] = 10*Math.cos(t);
-	eye[2] = 10*Math.sin(t);
+	var R = 10;
+	eye[0] = R*Math.cos(t);
+	eye[2] = R*Math.sin(t);
 	camera.lookAt(eye, center, up);
 
 	gl.clear(gl.COLOR_BUFFER_BIT);
