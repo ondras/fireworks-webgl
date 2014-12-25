@@ -1,0 +1,28 @@
+@import url(http://fonts.googleapis.com/css?family=Codystar&subset=latin,latin-ext);
+
+html, body { 
+	margin: 0;
+	height: 100%;
+	overflow: hidden;
+}
+
+canvas {
+	display: block;
+}
+
+#jukebox {
+	position: absolute;
+	right: 0;
+	bottom: 0;
+}
+
+#banner {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	font-size: 300%;
+	font-family: codystar;
+	color: #fff;
+	text-align: center;
+}

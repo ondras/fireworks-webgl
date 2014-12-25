@@ -6,14 +6,15 @@ var Explosion = function(gl) {
 
 	var center = vec3.create();
 	for (var i=0;i<3;i++) {
-		center[i] = 4*(Math.random()-.5);
+		center[i] = 10*(Math.random()-.5);
 	}
 	mat4.translate(this._position, this._position, center);
 	
 	var color = vec3.fromValues(0.2+0.8*Math.random(), 0.2+0.8*Math.random(), 0.2+0.8*Math.random());
+	var force = 0.5 + 0.5*Math.random();
 
 	this._particleSets = [
-		new ParticleSet(gl, color)
+		new ParticleSet(gl, color, force)
 	];
 }
 

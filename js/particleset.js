@@ -1,4 +1,4 @@
-var ParticleSet = function(gl, color) {
+var ParticleSet = function(gl, color, force) {
 	this._gl = gl;
 	this._buffers = {
 		position: gl.createBuffer(),
@@ -6,6 +6,7 @@ var ParticleSet = function(gl, color) {
 		velocity: gl.createBuffer()
 	}
 	
+	this._force = force;
 	this._build(gl, this._buffers);
 	this._color = color;
 }
@@ -19,7 +20,7 @@ ParticleSet.prototype._build = function(gl, buffers) {
 	
 	for (var i=0;i<this._count;i++) {
 		position.push(0, 0, 0);
-		vec3.random(tmp, 0.3);
+		vec3.random(tmp, this._force);
 		velocity.push(tmp[0], tmp[1], tmp[2]);
 	}
 

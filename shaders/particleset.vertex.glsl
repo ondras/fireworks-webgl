@@ -24,7 +24,7 @@ void main(void) {
 
 	float distanceSquared = abs(dot(cameraPosition, cameraPosition));
 	distanceSquared = clamp(distanceSquared, 1.0, 10000.0);      
-	gl_PointSize = 4.0 + 300.0 / distanceSquared;
+	gl_PointSize = 5.0 + 300.0 / distanceSquared;
 
 	vLifetime = 1.0 - (age / uLifetime);
 	vColor = uColor;
