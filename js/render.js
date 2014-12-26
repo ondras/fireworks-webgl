@@ -48,12 +48,6 @@ var Render = {
 	
 		this._tick = this._tick.bind(this);
 		this._tick();
-		
-		var add = function() {
-			Render.scene.push(new Explosion(Render.gl));
-			setTimeout(add, 500 + 2000*Math.random());
-		}
-		add();
 	},
 	
 	_sync: function() {
