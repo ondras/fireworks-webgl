@@ -17,6 +17,29 @@
 	</head>
 
 	<body>
+		<div id="info">&copy; 2014 <a target="_blank" href="http://ondras.zarovi.cz/">Ondřej Žára</a></div>
 		<div id="banner"></div>
+		<div id="jukebox">
+			<input type="radio" name="mode" value="url" id="mode-url" />
+			<label for="mode-url">Custom URL</label>
+			<input type="radio" checked="checked" name="mode" value="playlist" id="mode-playlist" />
+			<label for="mode-playlist">Built-in playlist</label>
+			<input type="radio" name="mode" value="file" id="mode-file" />
+			<label for="mode-file">Custom local file</label>
+			<form id="playlist">
+				<button id="prev">&#9668;</button>
+				<span id="current"></span>
+				/
+				<span id="total"></span>
+				<button id="next">&#9658;</button>
+			</form>
+			<form id="url">
+				<input type="text" size="40" placeholder="Enter song URL" />
+				<input type="submit" value="Play" />
+			</form>
+			<form id="file">
+				<input type="file" />
+			</form>
+		</div>
 	</body>
 </html>

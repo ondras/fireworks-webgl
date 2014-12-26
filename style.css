@@ -4,16 +4,25 @@ html, body {
 	margin: 0;
 	height: 100%;
 	overflow: hidden;
+	background-color: #000;
+	color: #fff;
+	font-family: sans-serif;
 }
 
 canvas {
 	display: block;
 }
 
-#jukebox {
+#info {
 	position: absolute;
-	right: 0;
-	bottom: 0;
+	left: 3px;
+	bottom: 3px;
+	font-size: 70%;
+	opacity: 0.5;
+}
+
+#info a {
+	color: #fff;
 }
 
 #banner {
@@ -23,6 +32,56 @@ canvas {
 	width: 100%;
 	font-size: 300%;
 	font-family: codystar;
-	color: #fff;
 	text-align: center;
 }
+
+#jukebox {
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	text-align: center;
+	background-color: rgba(255, 255, 255, 0.2);
+	border-radius: 15px 0 0 0;
+	padding: 5px;
+	transform: translate(0, 100%) translate(0, -25px);
+	transition: all 300ms;
+}
+
+#jukebox:hover {
+	transform: none;
+}
+
+#jukebox:before {
+	content: "Jukebox";
+	display: block;
+	height: 25px;
+	text-transform: uppercase;
+}
+
+#jukebox label {
+	margin: 0 10px;
+}
+
+#jukebox form {
+	display: none;
+	margin-top: 8px;
+}
+
+#jukebox [value=playlist]:checked ~ #playlist,
+#jukebox [value=url]:checked ~ #url,
+#jukebox [value=file]:checked ~ #file {
+	display: block;
+}
+
+#jukebox :checked + label {
+	font-weight: bold;
+}
+
+#jukebox [type=radio] {
+	display: none;
+}
+
+#jukebox label {
+	cursor: pointer;
+}
+
