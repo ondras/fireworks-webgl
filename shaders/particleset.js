@@ -2,7 +2,7 @@ Program.ParticleSet = function(gl) {
 	var vs = this._get("shaders/particleset.vertex.glsl");
 	var fs = this._get("shaders/particleset.fragment.glsl");
 	
-	var attributes = ["aPosition", "aVelocity"];
+	var attributes = ["aVelocity"];
 	var uniforms = ["uModelView", "uProjection", "uStartTime", "uCurrentTime", "uLifetime", "uGravity", "uColor"];
 	
 	Program.call(this, gl, {

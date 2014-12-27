@@ -1,7 +1,15 @@
+/**
+ * @param {WebGL} gl
+ * @param {float} [force=0.5] 0..1
+ */
 var Explosion = function(gl, force) {
 	this._gl = gl;
 	this._ts = Date.now();
-	this._lifetime = 2000 + 2000*Math.random();
+
+	force = force || 0.5;
+	force = 0.1 + force + 0.3*Math.random();
+
+	this._lifetime = 2000 + 1000*force + 1500*Math.random();
 	this._position = mat4.create();
 
 	var center = vec3.create();
@@ -9,22 +17,41 @@ var Explosion = function(gl, force) {
 		center[i] = 10*(Math.random()-.5);
 	}
 	mat4.translate(this._position, this._position, center);
+	mat4.rotateX(this._position, this._position, Math.random()*Math.PI);
+	mat4.rotateY(this._position, this._position, Math.random()*Math.PI);
 	
-	var color = vec3.create();
-	for (var i=0;i<color.length;i++) {
-		color[i] = 0.4 + 0.6*Math.random();
+	this._particleSets = [];
+	
+	var r = Math.random();
+	switch (true) {
+		case (r > 0.5):
+			this._buildSet("sphere", force);
+		break;
+
+		case (r > 0.4):
+			this._buildSet("circle", force);
+		break;
+
+		case (r > 0.2):
+			this._buildSet("circle", force*0.7);
+			this._buildSet("circle", force*1.2);
+		break;
+
+		default:
+			this._buildSet("sphere", force*0.7);
+			this._buildSet("circle", force*1.2);
+		break;
 	}
-
-	force = (force || 0.5) + 0.5*Math.random();
-
-	this._particleSets = [
-		new ParticleSet(gl, color, force)
-	];
 }
 
 Explosion.prototype.render = function(program, now, vMatrix) {
 	var age = now - this._ts;
-	if (age > this._lifetime) { return false; }
+	if (age > this._lifetime) { 
+		this._particleSets.forEach(function(ps) {
+			ps.destroy();
+		});
+		return false;
+	}
 
 	var gl = this._gl;
 	var a = program.attributes;
@@ -41,4 +68,12 @@ Explosion.prototype.render = function(program, now, vMatrix) {
 	});
 	
 	return true;
+}
+
+Explosion.prototype._buildSet = function(type, force) {
+	var color = vec3.create();
+	for (var i=0;i<color.length;i++) {
+		color[i] = 0.4 + 0.6*Math.random();
+	}
+	this._particleSets.push(new ParticleSet(this._gl, type, force, color));
 }

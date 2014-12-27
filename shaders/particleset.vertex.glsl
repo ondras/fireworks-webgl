@@ -1,4 +1,3 @@
-attribute vec3 aPosition;
 attribute vec3 aVelocity;
 
 uniform mat4 uProjection;
@@ -15,9 +14,8 @@ varying float vLifetime;
 void main(void) {
 	float age = float(uCurrentTime - uStartTime);
 
-	vec3 position = aPosition 
-						+ log(1.0+age * 0.1) * aVelocity
-						+ 0.5 * age * age * uGravity;
+	vec3 position = log(1.0+age * 0.1) * aVelocity
+					+ 0.5 * age * age * uGravity;
 						
 	vec4 cameraPosition = uModelView * vec4(position, 1.0);
 	gl_Position = uProjection * cameraPosition;

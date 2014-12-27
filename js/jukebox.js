@@ -7,17 +7,22 @@ var Jukebox = {
 	_audio: new Audio(),
 	_data: null,
 	_analyser: null,
-	_lastValue: 0,
+	_last: {
+		ts: 0,
+		value: 0
+	},
+	_decay: 200,
 	_playlistIndex: -1,
 	_playlist: [
-		{name:"ZZ Top &ndash; Gimme All Your Lovin'", file:"zz.ogg", threshold:1.5},
-		{name:"Peter Gabriel &ndash; Sledge Hammer", file:"hammer.ogg", threshold:2},
-		{name:"Lenny Kravitz &ndash; American Woman", file:"woman.ogg", threshold:2},
-		{name:"Phatt Bastard &amp; The Drummachine", file:"phatt.ogg", threshold:1},
-		{name:"Primal Scream &ndash; Rocks", file:"rocks.ogg", threshold:2},
-		{name:"Propellerheads &ndash; History Repeating", file:"history.ogg", threshold:2},
-		{name:"Mousse T. &ndash; Horny", file:"horny.ogg", threshold:2.5},
-		{name:"Tom Jones &ndash; Sexbomb", file:"sexbomb.ogg", threshold:1.5}
+		{name:"ZZ Top &ndash; Gimme All Your Lovin'", file:"zz.ogg"},
+		{name:"Lenny Kravitz &ndash; American Woman", file:"woman.ogg"},
+		{name:"Phatt Bastard &amp; The Drummachine", file:"phatt.ogg"},
+		{name:"Primal Scream &ndash; Rocks", file:"rocks.ogg"},
+		{name:"Peter Gabriel &ndash; Sledge Hammer", file:"hammer.ogg"},
+		{name:"Caravan Palace &ndash; Rock It For Me", file:"rockit.ogg"},
+		{name:"Propellerheads &ndash; History Repeating", file:"history.ogg"},
+		{name:"Mousse T. &ndash; Horny", file:"horny.ogg"},
+		{name:"Tom Jones &ndash; Sexbomb", file:"sexbomb.ogg"}
 	],
 	
 	handleEvent: function(e) {
@@ -64,7 +69,7 @@ var Jukebox = {
 		this._audio.addEventListener("ended", this);
 		
 		this._analyser = this._ctx.createAnalyser();
-		this._analyser.fftSize = 2048;
+		this._analyser.fftSize = 1024;
 		this._analyser.maxDecibels = -20;
 		this._analyser.smoothingTimeConstant = 0.5
 		this._analyser.connect(this._ctx.destination);
@@ -160,14 +165,30 @@ var Jukebox = {
 	
 	_tick: function() {
 		this._analyser.getByteFrequencyData(this._data);
-		
+
+		/* current values */
+		var now = Date.now();
 		var value = this._data[0];
-		var delta = value-this._lastValue;
-		this._lastValue = value;
+
+		/* diffs */
+		var delta = value-this._last.value;
+		var timeDiff = now - this._last.ts;
 		
-		if (delta > 3) {
-			Render.scene.push(new Explosion(Render.gl));
+		/* always maintain last */
+		this._last.value = value;
+
+		if (timeDiff < this._decay) { /* decay */
+			this._last.value = value;
+			return;
 		}
+
+		
+		if (delta > 15) {
+			this._last.ts = now;
+			var force = delta / 50;
+			Render.scene.push(new Explosion(Render.gl, force));
+		}
+
 		return;
 		
 		
@@ -203,7 +224,7 @@ var Jukebox = {
 			
 		}
 		
-		bars(C[0], this._data);
+		//bars(C[0], this._data);
 
 		if (!tmp) { 
 			tmp = [].slice.call(this._data);
