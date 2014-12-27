@@ -30,9 +30,11 @@ canvas {
 	top: 0;
 	left: 0;
 	width: 100%;
-	font-size: 300%;
+	font-size: 5vw;
 	font-family: codystar;
 	text-align: center;
+	animation: colors 5s infinite;
+	-webkit-animation: colors 5s infinite;
 }
 
 #jukebox {
@@ -85,3 +87,24 @@ canvas {
 	cursor: pointer;
 }
 
+@keyframes colors {
+	0% { color: #fff; }
+	15% { color: #ff3; }
+	30% { color: #f66; }
+	45% { color: #f3f; }
+	60% { color: #66f; }
+	75% { color: #3ff; }
+	90% { color: #6f6; }
+	100% { color: #fff; }
+}
+
+@-webkit-keyframes colors {
+	0% { color: #fff; }
+	15% { color: #ff3; }
+	30% { color: #f66; }
+	45% { color: #f3f; }
+	60% { color: #66f; }
+	75% { color: #3ff; }
+	90% { color: #6f6; }
+	100% { color: #fff; }
+}

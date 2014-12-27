@@ -65,6 +65,7 @@ var Jukebox = {
 		
 		this._analyser = this._ctx.createAnalyser();
 		this._analyser.fftSize = 2048;
+		this._analyser.maxDecibels = -20;
 		this._analyser.smoothingTimeConstant = 0.5
 		this._analyser.connect(this._ctx.destination);
 
@@ -160,19 +161,18 @@ var Jukebox = {
 	_tick: function() {
 		this._analyser.getByteFrequencyData(this._data);
 		
-		var value = (this._data[12]);
-
-		var delta = value / this._lastValue;
-
+		var value = this._data[0];
+		var delta = value-this._lastValue;
 		this._lastValue = value;
 		
 		if (delta > 3) {
 			Render.scene.push(new Explosion(Render.gl));
 		}
+		return;
 		
 		
 		var bars = function(canvas, data) {
-			var w = 10;
+			var w = 2;
 			var s = 1;
 			var c = canvas.getContext("2d");
 			canvas.width = data.length * (w+s);
@@ -194,7 +194,7 @@ var Jukebox = {
 			for (var i=0;i<len;i++) {
 				c.beginPath();
 				data.forEach(function(value, index) {
-					var amount = 50*value[i] + 20*i;
+					var amount = value[i] + 20*i;
 					c[index ? "lineTo" : "moveTo"](index, canvas.height-amount);
 				});
 				c.strokeStyle = colors[i % colors.length];
@@ -211,14 +211,8 @@ var Jukebox = {
 		}
 		
 		deltas.push([
-			this._data[0]/tmp[0] || 0,
-			this._data[1]/tmp[1] || 0,
-			this._data[2]/tmp[2] || 0,
-			this._data[3]/tmp[3] || 0,
-			this._data[11]/tmp[11] || 0,
-			this._data[12]/tmp[12] || 0,
-			this._data[13]/tmp[13] || 0,
-			this._data[14]/tmp[14] || 0,
+			50*(this._data[0]/tmp[0] || 0),
+			this._data[0]-tmp[0],
 		]);
 		if (deltas.length > 200) deltas.shift();
 		line(C[1], deltas);

@@ -8,7 +8,7 @@ void main(void) {
 	if (dist > 1.0) { discard; }
 
 	float alpha = 1.0-dist;
-	alpha = pow(alpha, 2.0);
+	alpha = pow(alpha, 3.0);
 	alpha = alpha * vLifetime;
 
 	gl_FragColor = vec4(vColor, alpha);

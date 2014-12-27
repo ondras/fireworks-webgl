@@ -1,4 +1,4 @@
-var Explosion = function(gl) {
+var Explosion = function(gl, force) {
 	this._gl = gl;
 	this._ts = Date.now();
 	this._lifetime = 2000 + 2000*Math.random();
@@ -10,8 +10,12 @@ var Explosion = function(gl) {
 	}
 	mat4.translate(this._position, this._position, center);
 	
-	var color = vec3.fromValues(0.2+0.8*Math.random(), 0.2+0.8*Math.random(), 0.2+0.8*Math.random());
-	var force = 0.5 + 0.5*Math.random();
+	var color = vec3.create();
+	for (var i=0;i<color.length;i++) {
+		color[i] = 0.4 + 0.6*Math.random();
+	}
+
+	force = (force || 0.5) + 0.5*Math.random();
 
 	this._particleSets = [
 		new ParticleSet(gl, color, force)

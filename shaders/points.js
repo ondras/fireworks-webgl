@@ -16,7 +16,7 @@ Program.Points.prototype = Object.create(Program.prototype);
 
 Program.Points.prototype._get = function(url) {
 	var xhr = new XMLHttpRequest();
-	xhr.open("get", url, false);
+	xhr.open("get", url + "?" + Math.random(), false);
 	xhr.send();
 	return xhr.responseText;
 }
