@@ -1,7 +1,3 @@
-var C = [null, null];
-var deltas = [];
-var tmp = null;
-
 var Jukebox = {
 	_ctx: null,
 	_audio: new Audio(),
@@ -11,7 +7,7 @@ var Jukebox = {
 		ts: 0,
 		value: 0
 	},
-	_decay: 200,
+	_decay: 300,
 	_playlistIndex: -1,
 	_playlist: [
 		{name:"ZZ Top &ndash; Gimme All Your Lovin'", file:"zz.ogg"},
@@ -82,16 +78,7 @@ var Jukebox = {
 		this._next();
 
 		this._tick = this._tick.bind(this);
-		setInterval(this._tick, 50);
-		
-		for (var i=0;i<C.length;i++) {
-			var canvas = document.createElement("canvas");
-			C[i] = canvas;
-			canvas.height = 260;
-			canvas.style.top = (260*i) + "px";
-			document.body.appendChild(canvas);
-			canvas.style.position = "absolute";
-		}
+		setInterval(this._tick, 30);
 	},
 	
 	_build: function() {
@@ -187,59 +174,10 @@ var Jukebox = {
 			this._last.ts = now;
 			var force = delta / 50;
 			Render.scene.push(new Explosion(Render.gl, force));
-		}
-
-		return;
-		
-		
-		var bars = function(canvas, data) {
-			var w = 2;
-			var s = 1;
-			var c = canvas.getContext("2d");
-			canvas.width = data.length * (w+s);
-			c.fillStyle = "white";
 			
-			for (var i=0;i<data.length;i++) {
-				var amount = data[i] + 2;
-				c.fillRect(i*(w+s), canvas.height-amount, w, amount);
-				
-			}
+			/* one more! */
+			if (force > 1.1) { Render.scene.push(new Explosion(Render.gl, 1)); }
 		}
-		
-		var line = function(canvas, data) {
-			var c = canvas.getContext("2d");
-			canvas.width = data.length;
-			var colors = ["white", "red", "green", "blue", "yellow", "pink"];
-			
-			var len = data[0].length;
-			for (var i=0;i<len;i++) {
-				c.beginPath();
-				data.forEach(function(value, index) {
-					var amount = value[i] + 20*i;
-					c[index ? "lineTo" : "moveTo"](index, canvas.height-amount);
-				});
-				c.strokeStyle = colors[i % colors.length];
-				c.stroke();
-			}
-			
-		}
-		
-		//bars(C[0], this._data);
-
-		if (!tmp) { 
-			tmp = [].slice.call(this._data);
-			return;
-		}
-		
-		deltas.push([
-			50*(this._data[0]/tmp[0] || 0),
-			this._data[0]-tmp[0],
-		]);
-		if (deltas.length > 200) deltas.shift();
-		line(C[1], deltas);
-
-		tmp = [].slice.call(this._data);
-
 	}
 }
 window.addEventListener("load", Jukebox);

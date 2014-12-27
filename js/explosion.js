@@ -9,7 +9,7 @@ var Explosion = function(gl, force) {
 	force = force || 0.5;
 	force = 0.1 + force + 0.3*Math.random();
 
-	this._lifetime = 2000 + 1000*force + 1500*Math.random();
+	this._lifetime = 1500 + 1000*force + 1500*Math.random();
 	this._position = mat4.create();
 
 	var center = vec3.create();
@@ -24,17 +24,29 @@ var Explosion = function(gl, force) {
 	
 	var r = Math.random();
 	switch (true) {
-		case (r > 0.5):
+		case (r > 0.4):
 			this._buildSet("sphere", force);
 		break;
 
-		case (r > 0.4):
+		case (r > 0.3):
 			this._buildSet("circle", force);
 		break;
 
 		case (r > 0.2):
 			this._buildSet("circle", force*0.7);
 			this._buildSet("circle", force*1.2);
+		break;
+
+		case (r > 0.1):
+			this._buildSet("circle", force*0.7);
+			this._buildSet("circle", force*1);
+			this._buildSet("circle", force*1.3);
+		break;
+
+		case (r > 0.05):
+			this._buildSet("sphere", force*0.7);
+			this._buildSet("circle", force*1);
+			this._buildSet("circle", force*1.3);
 		break;
 
 		default:
@@ -72,8 +84,8 @@ Explosion.prototype.render = function(program, now, vMatrix) {
 
 Explosion.prototype._buildSet = function(type, force) {
 	var color = vec3.create();
-	for (var i=0;i<color.length;i++) {
-		color[i] = 0.4 + 0.6*Math.random();
-	}
+	color[0] = 0.4 + 0.6*Math.random();
+	color[1] = 0.3 + 0.6*Math.random();
+	color[2] = 0.2 + 0.6*Math.random();
 	this._particleSets.push(new ParticleSet(this._gl, type, force, color));
 }
