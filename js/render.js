@@ -51,10 +51,15 @@ var Render = {
 	},
 	
 	_sync: function() {
-		this._node.width = this._node.parentNode.offsetWidth;
-		this._node.height = this._node.parentNode.offsetHeight;
+		var w = this._node.parentNode.offsetWidth;
+		var h = this._node.parentNode.offsetHeight;
+		this._node.width = w;
+		this._node.height = h;
 		this._camera.syncPort(this._node);
-		this.gl.viewport(0, 0, this._node.width, this._node.height);
+		this.gl.viewport(0, 0, w, h);
+		if (w != this.gl.drawingBufferWidth || h != this.gl.drawingBufferHeight) {
+			alert("Your WebGL implementation seems to be having troubles with its drawing buffer size."); 
+		}
 	},
 
 	_render: function() {
