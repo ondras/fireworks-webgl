@@ -12,13 +12,13 @@ var Jukebox = {
 	_playlist: [
 		{name:"ZZ Top &ndash; Gimme All Your Lovin'", file:"zz.ogg"},
 		{name:"Lenny Kravitz &ndash; American Woman", file:"woman.ogg"},
-		{name:"Phatt Bastard &amp; The Drummachine", file:"phatt.ogg"},
 		{name:"Primal Scream &ndash; Rocks", file:"rocks.ogg"},
 		{name:"Peter Gabriel &ndash; Sledge Hammer", file:"hammer.ogg"},
 		{name:"Caravan Palace &ndash; Rock It For Me", file:"rockit.ogg"},
 		{name:"Propellerheads &ndash; History Repeating", file:"history.ogg"},
 		{name:"Mousse T. &ndash; Horny", file:"horny.ogg"},
-		{name:"Tom Jones &ndash; Sexbomb", file:"sexbomb.ogg"}
+		{name:"Tom Jones &ndash; Sexbomb", file:"sexbomb.ogg"},
+		{name:"Phatt Bastard &amp; The Drummachine", file:"phatt.ogg"}
 	],
 	
 	handleEvent: function(e) {
@@ -37,7 +37,7 @@ var Jukebox = {
 				if (e.target.id != "url") { return; }
 				var url = document.querySelector("#url input");
 				if (!url.value) { return; }
-				this._playUrl(url.value);
+				this._play(url.value);
 			break;
 			
 			case "change":
@@ -91,33 +91,6 @@ var Jukebox = {
 		document.querySelector("#jukebox #next").addEventListener("click", this);
 		document.querySelector("#jukebox #file input").addEventListener("change", this);
 		document.querySelector("#jukebox #total").innerHTML = this._playlist.length;
-	},
-	
-	_playUrl: function(url) {
-		var xhr = new XMLHttpRequest();
-		xhr.open("head", url, true);
-		
-		xhr.addEventListener("load", function() {
-			var ct = xhr.getResponseHeader("Content-Type");
-			if (!this._testType(ct)) { return; }
-			this._play(url);
-		}.bind(this));
-
-		xhr.addEventListener("error", function(e) {
-			var str = "Sorry, this URL cannot be opened.\n\n";
-			if (xhr.status) {
-				str += "HTTP/" + xhr.status;
-			} else {
-				str += "Please make sure that the resource is served with proper CORS headers.";
-			}
-			alert(str);
-		});
-
-		try {
-			xhr.send();
-		} catch (e) {
-			alert("Sorry, this URL cannot be opened (" + e.message + ")");
-		}
 	},
 	
 	_testType: function(type) {

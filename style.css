@@ -67,6 +67,7 @@ canvas {
 #jukebox form {
 	display: none;
 	margin-top: 8px;
+	font-size: 80%;
 }
 
 #jukebox [value=playlist]:checked ~ #playlist,
