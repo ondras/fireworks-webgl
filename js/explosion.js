@@ -24,8 +24,18 @@ var Explosion = function(gl, force) {
 	
 	var r = Math.random();
 	switch (true) {
+		case (r > 0.7):
+			this._buildSet("sphere", force, 0.5);
+			this._buildSet("sphere", force, 0.5);
+		break;
+
 		case (r > 0.4):
 			this._buildSet("sphere", force);
+		break;
+
+		case (r > 0.35):
+			this._buildSet("circle", force, 0.5);
+			this._buildSet("circle", force, 0.5);
 		break;
 
 		case (r > 0.3):
@@ -82,10 +92,10 @@ Explosion.prototype.render = function(program, now, vMatrix) {
 	return true;
 }
 
-Explosion.prototype._buildSet = function(type, force) {
+Explosion.prototype._buildSet = function(type, force, amount) {
 	var color = vec3.create();
 	color[0] = 0.4 + 0.6*Math.random();
 	color[1] = 0.3 + 0.6*Math.random();
 	color[2] = 0.2 + 0.6*Math.random();
-	this._particleSets.push(new ParticleSet(this._gl, type, force, color));
+	this._particleSets.push(new ParticleSet(this._gl, type, force, color, amount));
 }

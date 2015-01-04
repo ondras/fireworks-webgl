@@ -14,7 +14,7 @@ varying float vLifetime;
 void main(void) {
 	float age = float(uCurrentTime - uStartTime);
 
-	vec3 position = log(1.0+age * 0.1) * aVelocity
+	vec3 position = log(1.0+age * 0.02) * aVelocity
 					+ 0.5 * age * age * uGravity;
 						
 	vec4 cameraPosition = uModelView * vec4(position, 1.0);
@@ -22,7 +22,7 @@ void main(void) {
 
 	float distanceSquared = abs(dot(cameraPosition, cameraPosition));
 	distanceSquared = clamp(distanceSquared, 1.0, 10000.0);      
-	gl_PointSize = 6.0 + 1000.0 / distanceSquared;
+	gl_PointSize = 7.0 + 1000.0 / distanceSquared;
 
 	vLifetime = 1.0 - (age / uLifetime);
 	vColor = uColor;

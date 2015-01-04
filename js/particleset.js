@@ -1,11 +1,11 @@
-var ParticleSet = function(gl, type, force, color) {
+var ParticleSet = function(gl, type, force, color, amount) {
 	this._gl = gl;
 	this._buffers = {
 		velocity: gl.createBuffer()
 	}
 	
 	this._color = color;
-	this._build(type, force);
+	this._build(type, force, amount);
 }
 
 ParticleSet.prototype.destroy = function() {
@@ -15,10 +15,10 @@ ParticleSet.prototype.destroy = function() {
 	this._buffers = {};
 }
 
-ParticleSet.prototype._build = function(type, force) {
+ParticleSet.prototype._build = function(type, force, amount) {
 	var gl = this._gl;
 	var buffers = this._buffers;
-	this._count = (type == "sphere" ? 1000 : 200);
+	this._count = Math.round((type == "sphere" ? 1000 : 200) * (amount || 1));
 	
 	var tmp3 = vec3.create();
 	var tmp2 = vec2.create();
