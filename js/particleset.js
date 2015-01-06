@@ -25,10 +25,11 @@ ParticleSet.prototype._build = function(type, force, amount) {
 	var velocity = [];
 	
 	for (var i=0;i<this._count;i++) {
+		var diff = 1 + (Math.random()-0.5)*0.05;
 		if (type == "sphere") {
-			vec3.random(tmp3, force);
+			vec3.random(tmp3, force + diff);
 		} else {
-			vec2.random(tmp2, force);
+			vec2.random(tmp2, force + diff);
 			vec2.copy(tmp3, tmp2);
 			tmp3[2] = 0;
 		}
