@@ -20,18 +20,18 @@ var Jukebox = {
 		{name:"Tom Jones &ndash; Sexbomb", file:"sexbomb.ogg"},
 		{name:"Phatt Bastard &amp; The Drummachine", file:"phatt.ogg"}
 	],
-	
+
 	handleEvent: function(e) {
 		switch (e.type) {
 			case "load":
 				this._init();
 			break;
-			
+
 			case "ended":
 				document.querySelector("#banner").innerHTML = "";
 				if (this._playlistIndex > -1) { this._next(); }
  			break;
-			
+
 			case "submit":
 				e.preventDefault();
 				if (e.target.id != "url") { return; }
@@ -39,7 +39,7 @@ var Jukebox = {
 				if (!url.value) { return; }
 				this._play(url.value);
 			break;
-			
+
 			case "change":
 				if (!e.target.files.length) { return; }
 				var file = e.target.files[0];
@@ -47,13 +47,13 @@ var Jukebox = {
 				var url = URL.createObjectURL(file);
 				this._play(url, file.name);
 			break;
-			
+
 			case "click":
 				this["_" + e.target.id]();
 			break;
 		}
 	},
-	
+
 	_init: function() {
 		try {
 			this._ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -63,7 +63,7 @@ var Jukebox = {
 		}
 
 		this._audio.addEventListener("ended", this);
-		
+
 		this._analyser = this._ctx.createAnalyser();
 		this._analyser.fftSize = 1024;
 		this._analyser.maxDecibels = -20;
@@ -75,24 +75,31 @@ var Jukebox = {
 		this._data = new Uint8Array(this._analyser.frequencyBinCount);
 
 		this._build();
-		this._next();
+//		this._next();
 
 		this._tick = this._tick.bind(this);
 		setInterval(this._tick, 30);
+
+		document.querySelector("#banner").innerHTML = "Click to start";
+		let onclick = () => {
+			document.body.removeEventListener("click", onclick);
+			this._next();
+		}
+		document.body.addEventListener("click", onclick);
 	},
-	
+
 	_build: function() {
 		var forms = [].slice.call(document.querySelectorAll("#jukebox form"));
 		forms.forEach(function(form) {
 			form.addEventListener("submit", this);
 		}, this);
-		
+
 		document.querySelector("#jukebox #prev").addEventListener("click", this);
 		document.querySelector("#jukebox #next").addEventListener("click", this);
 		document.querySelector("#jukebox #file input").addEventListener("change", this);
 		document.querySelector("#jukebox #total").innerHTML = this._playlist.length;
 	},
-	
+
 	_testType: function(type) {
 		if (!this._audio.canPlayType(type)) {
 			alert("Sorry, this file type (" + type + ") is not supported by your browser.");
@@ -101,28 +108,28 @@ var Jukebox = {
 			return true;
 		}
 	},
-	
+
 	_play: function(url, name) {
 		this._audio.src = url;
 		this._audio.play();
 		document.querySelector("#banner").innerHTML = name || url;
 	},
-	
+
 	_next: function() {
 		this._playList(this._playlistIndex+1);
 	},
-	
+
 	_prev: function() {
 		this._playList(this._playlistIndex-1);
 	},
-	
+
 	_playList: function(index) {
 		this._playlistIndex = (index + this._playlist.length) % this._playlist.length;
 		document.querySelector("#jukebox #current").innerHTML = this._playlistIndex+1;
 		var item = this._playlist[this._playlistIndex];
 		this._play("ogg/" + item.file, item.name);
 	},
-	
+
 	_tick: function() {
 		this._analyser.getByteFrequencyData(this._data);
 
@@ -133,7 +140,7 @@ var Jukebox = {
 		/* diffs */
 		var delta = value-this._last.value;
 		var timeDiff = now - this._last.ts;
-		
+
 		/* always maintain last */
 		this._last.value = value;
 
@@ -142,12 +149,12 @@ var Jukebox = {
 			return;
 		}
 
-		
+
 		if (delta > 15) {
 			this._last.ts = now;
 			var force = delta / 50;
 			Render.scene.push(new Explosion(Render.gl, force));
-			
+
 			/* one more! */
 			if (force > 1.1) { Render.scene.push(new Explosion(Render.gl, 1)); }
 		}
