@@ -83,6 +83,9 @@ var Jukebox = {
 		document.querySelector("#banner").innerHTML = "Click to start";
 		let onclick = () => {
 			document.body.removeEventListener("click", onclick);
+			// Resume the audio context now that the user has interacted with page
+			// https://developers.google.com/web/updates/2017/09/autoplay-policy-changes#webaudio
+			this._ctx.resume();
 			this._next();
 		}
 		document.body.addEventListener("click", onclick);
